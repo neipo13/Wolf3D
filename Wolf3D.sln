@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wolf3D", "Wolf3D\Wolf3D.csproj", "{8D74516D-8B42-487B-9173-BF955C92093B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nez.Monogame.Standard", "Nez-master\Nez.Portable\Nez.Monogame.Standard.csproj", "{BC0498B6-FA42-4578-83C9-903C49B60C76}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		ItchBeta|Any CPU = ItchBeta|Any CPU
+		ItchBeta|x64 = ItchBeta|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D74516D-8B42-487B-9173-BF955C92093B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D74516D-8B42-487B-9173-BF955C92093B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D74516D-8B42-487B-9173-BF955C92093B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8D74516D-8B42-487B-9173-BF955C92093B}.Debug|x64.Build.0 = Debug|Any CPU
+		{8D74516D-8B42-487B-9173-BF955C92093B}.ItchBeta|Any CPU.ActiveCfg = ItchBeta|Any CPU
+		{8D74516D-8B42-487B-9173-BF955C92093B}.ItchBeta|Any CPU.Build.0 = ItchBeta|Any CPU
+		{8D74516D-8B42-487B-9173-BF955C92093B}.ItchBeta|x64.ActiveCfg = ItchBeta|Any CPU
+		{8D74516D-8B42-487B-9173-BF955C92093B}.ItchBeta|x64.Build.0 = ItchBeta|Any CPU
+		{8D74516D-8B42-487B-9173-BF955C92093B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D74516D-8B42-487B-9173-BF955C92093B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D74516D-8B42-487B-9173-BF955C92093B}.Release|x64.ActiveCfg = Release|Any CPU
+		{8D74516D-8B42-487B-9173-BF955C92093B}.Release|x64.Build.0 = Release|Any CPU
+		{BC0498B6-FA42-4578-83C9-903C49B60C76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC0498B6-FA42-4578-83C9-903C49B60C76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC0498B6-FA42-4578-83C9-903C49B60C76}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BC0498B6-FA42-4578-83C9-903C49B60C76}.Debug|x64.Build.0 = Debug|Any CPU
+		{BC0498B6-FA42-4578-83C9-903C49B60C76}.ItchBeta|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC0498B6-FA42-4578-83C9-903C49B60C76}.ItchBeta|Any CPU.Build.0 = Debug|Any CPU
+		{BC0498B6-FA42-4578-83C9-903C49B60C76}.ItchBeta|x64.ActiveCfg = Debug|Any CPU
+		{BC0498B6-FA42-4578-83C9-903C49B60C76}.ItchBeta|x64.Build.0 = Debug|Any CPU
+		{BC0498B6-FA42-4578-83C9-903C49B60C76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC0498B6-FA42-4578-83C9-903C49B60C76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC0498B6-FA42-4578-83C9-903C49B60C76}.Release|x64.ActiveCfg = Release|Any CPU
+		{BC0498B6-FA42-4578-83C9-903C49B60C76}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BF444C36-8708-4A39-A1C0-31A13CCB5AD1}
+	EndGlobalSection
+EndGlobal
