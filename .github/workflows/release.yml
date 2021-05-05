@@ -9,6 +9,7 @@ env:
   ITCH_USER_NAME: andrewnapierkowski
   ITCH_GAME_NAME: captain-korbis-2
   PROJECT_PATH: Wolf3D
+  NEZ_PATH: Nez-master/Nez.Portable/Nez.Monogame.Standard.csproj
 
 jobs:
   build:
@@ -40,6 +41,8 @@ jobs:
         sudo apt update
         sudo apt-get install --install-recommends winehq-stable
         wget -qO- https://raw.githubusercontent.com/MonoGame/MonoGame/develop/Tools/MonoGame.Effect.Compiler/mgfxc_wine_setup.sh | sh
+    - name: Build Nez
+      run: dotnet build ${{ env.NEZ_PATH }} --configuration release
     - name: Build Windows
       run: dotnet publish ${{ env.PROJECT_PATH }} -r win-x64 -c Release --output build-windows
     - name: Build Osx
