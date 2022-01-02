@@ -451,7 +451,7 @@ namespace Wolf3D.Scenes
             handsSprite.AddAnimation(Constants.HandStates.CHAINGUN_SHOOT, chainGunShoot);
             handsSprite.AddAnimation(Constants.HandStates.SHOTGUN_IDLE, shottyIdle);
             handsSprite.AddAnimation(Constants.HandStates.SHOTGUN_SHOOT, shottyShoot);
-            handsSprite.AddAnimation(Constants.HandStates.MELEE_IDLE, melee);
+            handsSprite.AddAnimation(Constants.HandStates.MELEE_SHOOT, melee);
 
             handsSprite.LocalOffset = new Vector2(0, -87);
 
