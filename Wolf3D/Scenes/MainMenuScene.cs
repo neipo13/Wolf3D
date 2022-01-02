@@ -27,6 +27,7 @@ namespace Wolf3D.Scenes
         //options buttons
         Slider sfxSlider;
         Slider musicSlider;
+        Slider mouseSenseSlider;
         CheckBox fullscreenCheckbox;
         SelectBox<string> windowSizeSelect;
         Button optionsToMain;
@@ -64,6 +65,7 @@ namespace Wolf3D.Scenes
 
             sfxSlider.OnChanged -= SfxChanged;
             musicSlider.OnChanged -= MusicChanged;
+            mouseSenseSlider.OnChanged -= MouseSenseChanged;
             optionsToMain.OnClicked -= OptionsToMain_OnClicked;
             fullscreenCheckbox.OnChanged -= FullscreenCheckbox_OnChanged;
 
@@ -157,6 +159,15 @@ namespace Wolf3D.Scenes
             optionsTable.Add(musicSlider);
             optionsTable.Row();
 
+            var mouseSenseTextComponent = new Label("MOUSE LOOK SENSITIVITY:", new LabelStyle(Color.White));
+            optionsTable.Add(mouseSenseTextComponent);
+            optionsTable.Row();
+            mouseSenseSlider = new Slider(0, 100, 1, false, SliderStyle.Create(Color.DarkSlateGray, Color.Gray));
+            mouseSenseSlider.SetValue(NezGame.gameSettings.mouseSense);
+            mouseSenseSlider.OnChanged += MouseSenseChanged;
+            optionsTable.Add(mouseSenseSlider);
+            optionsTable.Row();
+
             var checkboxStyle = new CheckBoxStyle(new PrimitiveDrawable( 20f, Color.DarkSlateGray), new PrimitiveDrawable(20f, Color.Green), null, Color.White);
             fullscreenCheckbox = new CheckBox("FULLSCREEN", checkboxStyle);
             fullscreenCheckbox.IsChecked = NezGame.gameSettings.isFullscreen;
@@ -217,6 +228,11 @@ namespace Wolf3D.Scenes
         {
             NezGame.gameSettings.musicVolume = (int)volume;
             NezGame.ApplySoundSettings();
+            NezGame.SaveSettings(NezGame.gameSettings);
+        }
+        public void MouseSenseChanged(float sense)
+        {
+            NezGame.gameSettings.mouseSense = (int)sense;
             NezGame.SaveSettings(NezGame.gameSettings);
         }
         #endregion

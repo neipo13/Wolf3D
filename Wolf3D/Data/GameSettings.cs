@@ -17,6 +17,9 @@ namespace Wolf3D.Data
         public bool isFullscreen { get; set; }
         public int musicVolume { get; set; }
         public int sfxVolume { get; set; }
+        public int mouseSense { get; set; }
+
+        public float mouseSenseMultiplier => mouseSense / 100f;
 
         public GameSettings()
         {
@@ -24,6 +27,7 @@ namespace Wolf3D.Data
             WindowWidth = 1920;
             WindowHeight = 1080;
             musicVolume = 100;
+            mouseSense = 50;
             sfxVolume = 100;
         }
 

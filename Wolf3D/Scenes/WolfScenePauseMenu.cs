@@ -23,6 +23,7 @@ namespace Wolf3D.Scenes
         Button exitButton;
         Slider sfxSlider;
         Slider musicSlider;
+        Slider mouseSenseSlider;
 
         Button notSureButton;
         Button amSureButton;
@@ -70,6 +71,16 @@ namespace Wolf3D.Scenes
             musicSlider.OnChanged += MusicChanged;
             table.Add(musicSlider);
             table.Row();
+
+            var mouseSenseText = new Label("Mouse Look Sensitivity:", new LabelStyle(Color.White));
+            table.Add(mouseSenseText);
+            table.Row();
+            mouseSenseSlider = new Slider(0, 100, 1, false, SliderStyle.Create(Color.DarkSlateGray, Color.Gray));
+            mouseSenseSlider.SetValue(NezGame.gameSettings.mouseSense);
+            mouseSenseSlider.OnChanged += MouseSenseChanged;
+            table.Add(mouseSenseSlider);
+            table.Row();
+
 
             var returnToGameButton = new TextButton("RETURN TO GAME", TextButtonStyle.Create(Color.Black, Color.DarkGray, Color.DarkSlateGray));
             returnToGameButton.OnClicked += ReturnToGame;
@@ -119,6 +130,7 @@ namespace Wolf3D.Scenes
         {
             exitButton.OnClicked -= Exit;
             sfxSlider.OnChanged -= SfxChanged;
+            mouseSenseSlider.OnChanged -= MouseSenseChanged;
             musicSlider.OnChanged -= MusicChanged;
             notSureButton.OnClicked -= NoReturn;
             amSureButton.OnClicked -= YesExit;
@@ -127,6 +139,11 @@ namespace Wolf3D.Scenes
         public void SfxChanged(float volume)
         {
             NezGame.gameSettings.sfxVolume = (int)volume;
+            NezGame.SaveSettings(NezGame.gameSettings);
+        }
+        public void MouseSenseChanged(float sense)
+        {
+            NezGame.gameSettings.mouseSense = (int)sense;
             NezGame.SaveSettings(NezGame.gameSettings);
         }
         public void MusicChanged(float volume)

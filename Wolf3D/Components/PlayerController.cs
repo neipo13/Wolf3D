@@ -123,7 +123,7 @@ namespace Wolf3D.Components
 
         public void Update()
         {
-            var mouseDelta = -Nez.Input.MousePositionDelta.X * mouseSensitivity;
+            var mouseDelta = -Nez.Input.MousePositionDelta.X * mouseSensitivity * NezGame.gameSettings.mouseSenseMultiplier;
             if (Nez.Input.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Left))
             {
                 state.rotate(rotateSpeed);
