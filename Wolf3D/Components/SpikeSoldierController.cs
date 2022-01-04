@@ -209,7 +209,7 @@ namespace Wolf3D.Components
 
 
                 //check if spike is in a wall
-                var proj = new Projectile(this.Entity.Scene, ParticleType.RedFlash, baseDirection, physicsLayer, collidesWithLayers, sprite.playerState, 7, 0f, 0.5f);
+                var proj = new Projectile(this.Entity.Scene, ParticleType.RedFlash, baseDirection, physicsLayer, collidesWithLayers, sprite.playerState, 7, 0f, 5f);
                 proj.Position = position;
                 var box = proj.GetComponent<BoxCollider>();
 
@@ -226,7 +226,7 @@ namespace Wolf3D.Components
                 Core.Schedule(waitTime, (t) =>
                 {
                     spikeSprite.Enabled = true;
-                    spikeSprite.Play(ParticleType.Spike.ToString());
+                    spikeSprite.Play(ParticleType.Spike.ToString(), AnimatedWolfSprite.LoopMode.ClampForever);
                     //spawn spike
                     var currentSprites = wolfRenderer.sprites;
                     var newSpriteLength = currentSprites.Length + 1;

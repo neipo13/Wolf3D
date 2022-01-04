@@ -43,6 +43,7 @@ namespace Wolf3D.Entities
 
             //collider
             BoxCollider collider = new BoxCollider(2f, 2f);
+            collider.IsTrigger = true;
             collider.PhysicsLayer = physicsLayer;
             collider.CollidesWithLayers = collidesWithLayers;
             AddComponent(collider);

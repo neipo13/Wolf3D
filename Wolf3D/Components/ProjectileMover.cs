@@ -9,13 +9,15 @@ using Wolf3D.Entities;
 
 namespace Wolf3D.Components
 {
-    public class ProjectileMover : Component, IUpdatable
+    public class ProjectileMover : Component, IUpdatable, ITriggerListener
     {
         Mover mover;
         CollisionResult collisionResult;
         Vector2 direction;
         float speed;
         int dmg;
+
+        ColliderTriggerHelper triggerHelper;
 
         public ProjectileMover(Vector2 direction, float speed, int dmg)
         {
@@ -29,21 +31,35 @@ namespace Wolf3D.Components
             base.OnAddedToEntity();
             this.mover = Entity.GetComponent<Mover>();
             collisionResult = new CollisionResult();
+            triggerHelper = new ColliderTriggerHelper(Entity);
         }
+
+        public void OnTriggerEnter(Collider other, Collider local)
+        {
+            ShootableEntity e = other.Entity as ShootableEntity;
+            if (e != null)
+            {
+                e.Hit(dmg);
+            }
+            this.Entity.Destroy();
+        }
+
+        public void OnTriggerExit(Collider other, Collider local) { }
 
         public void Update()
         {
             mover.Move(direction * speed * Time.DeltaTime, out collisionResult);
 
-            if(collisionResult.Collider != null)
-            {
-                ShootableEntity e = collisionResult.Collider.Entity as ShootableEntity;
-                if(e != null)
-                {
-                    e.Hit(dmg);
-                }
-                this.Entity.Destroy();
-            }
+            triggerHelper.Update();
+            //if(collisionResult.Collider != null)
+            //{
+            //    ShootableEntity e = collisionResult.Collider.Entity as ShootableEntity;
+            //    if(e != null)
+            //    {
+            //        e.Hit(dmg);
+            //    }
+            //    this.Entity.Destroy();
+            //}
         }
     }
 }
