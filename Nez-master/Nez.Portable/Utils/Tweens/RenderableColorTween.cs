@@ -10,12 +10,15 @@ namespace Nez.Tweens
 
 		public void SetTweenedValue(Color value)
 		{
+			if (_renderable == null) return;
 			_renderable.Color = value;
 		}
 
 
 		public Color GetTweenedValue()
 		{
+
+			if (_renderable == null) return Color.Black;
 			return _renderable.Color;
 		}
 

@@ -31,6 +31,8 @@ namespace Wolf3D.Renderers
         ITween<Vector2> returnToCenterTween;
         bool shaking = false;
 
+        bool needsPruned = false;
+
         //target holder
         RenderTarget2D renderTarget;
 
@@ -42,6 +44,13 @@ namespace Wolf3D.Renderers
             spriteBatch = new SpriteBatch(Core.GraphicsDevice);
             spriteColors = new Dictionary<string, Color[]>();
             renderTarget = new RenderTarget2D(Core.GraphicsDevice, NezGame.designWidth, NezGame.designHeight);
+        }
+
+        public override void Unload()
+        {
+            spriteBatch.Dispose();
+            spriteColors = null;
+            renderTarget.Dispose();
         }
 
         public void SetCameraShake(float intensity, float degredation, Vector2 direction)
@@ -90,6 +99,30 @@ namespace Wolf3D.Renderers
             }
         }
 
+        public void PruneSpriteList()
+        {
+            int numToChopOff = 0;
+            //dip when we hit a real sprite as the entity nulls will be first in the list
+            for(int i = 0; i < sprites.Length; i++)
+            {
+                var e = sprites[i];
+                if (e.Entity == null) numToChopOff++;
+                else break;
+            }
+
+            if(numToChopOff > 0)
+            {
+                var tempSprites = sprites;
+                sprites = new WolfSprite[tempSprites.Length - numToChopOff];
+                var index = 0;
+                for(int j = numToChopOff; j < tempSprites.Length; j++, index++)
+                {
+                    sprites[index] = tempSprites[j];
+                }
+            }
+            needsPruned = false;
+        }
+
         public void Update()
         {
             //camera shake update
@@ -122,9 +155,11 @@ namespace Wolf3D.Renderers
 
             //slap in sprites
             Array.Sort(sprites); //sorting far to near using CompareTo
+            //if(needsPruned) PruneSpriteList();
             for (int i = 0; i < sprites.Length; i++)
             {
                 var sprite = sprites[i];
+                if (sprite.Entity == null) needsPruned = true;
                 if (sprite.SpriteColors == null || !sprite.Enabled || sprite.Entity == null) continue;
                 var transY = sprite.transformY;
                 if(transY <= 0f) continue; // transY is how far in front 0/negative means its not drawn anyway, skip all the other calc at this point
@@ -135,13 +170,13 @@ namespace Wolf3D.Renderers
                 if (spriteHeight > NezGame.h || spriteHeight < 0f) spriteHeight = NezGame.h;
                 var spriteSourceWidth = (int)sprite.SpriteWidth();
                 int moveVertical = (int)(totalVerticalOffset / transY);
-                int startAdj = (int)(sprite.drawStartY + moveVertical);
+                int startAdj = sprite.drawStartY + moveVertical;
                 if (startAdj < 0) startAdj = 0;
-                int endAdj = (int)(sprite.drawEndY + moveVertical);
+                int endAdj = sprite.drawEndY + moveVertical;
                 if (endAdj > NezGame.h) endAdj = NezGame.h - 1;
                 int xOffset = (int)(screenShakeOffset.X / transX);
-                int startAdjX = (int)(sprite.drawStartX - xOffset);
-                int endAdjX = (int)(sprite.drawEndX - xOffset);
+                int startAdjX = sprite.drawStartX - xOffset;
+                int endAdjX = sprite.drawEndX - xOffset;
                 //loop through every vertical stripe of the sprite on screen
                 for (int stripe = startAdjX; stripe < endAdjX; stripe++)
                 {
@@ -157,8 +192,8 @@ namespace Wolf3D.Renderers
                         //4) ZBuffer, with perpendicular distance
                         if (transY < zBuffer[y, stripe])//4
                         {
-                            int d = ((int)(y - (int)moveVertical) * 256) - (NezGame.h * 128) + (spriteHeight * 128);  //256 and 128 factors to avoid floats
-                            int texY = ((int)(d * spriteSourceWidth) / spriteHeight) / 256;
+                            int d = ((y - moveVertical) * 256) - (NezGame.h * 128) + (spriteHeight * 128);  //256 and 128 factors to avoid floats
+                            int texY = (d * spriteSourceWidth / spriteHeight) / 256;
                             if (texY < 0) texY = 0;
                             else if (texY >= spriteSourceWidth) texY = spriteSourceWidth - 1;
                             var color = sprite.SpriteColors[spriteSourceWidth * texY + texX];
@@ -183,7 +218,6 @@ namespace Wolf3D.Renderers
         public override void Render(Scene scene)
         {            
             //draw from the buffer
-            spriteBatch.Begin();
             var joinedBuffer = new Color[colorBuffer.Length];
             var xLen = colorBuffer.GetLength(1);
             var yLen = colorBuffer.GetLength(0);
@@ -195,6 +229,7 @@ namespace Wolf3D.Renderers
                 }
             }
             renderTarget.SetData<Color>(joinedBuffer, 0, joinedBuffer.Length);
+            spriteBatch.Begin();
             spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
             spriteBatch.End();
         }

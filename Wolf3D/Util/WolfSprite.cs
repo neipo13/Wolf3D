@@ -105,7 +105,9 @@ namespace Wolf3D.Util
             get
             {
                 if (this.Entity == null) return 0f;
-                return playerState.invDet * (-playerState.Plane.Y * spriteX + playerState.Plane.X * spriteY);
+                var ty = playerState.invDet * (-playerState.Plane.Y * spriteX + playerState.Plane.X * spriteY);
+                if (ty > 0f && ty < 0.001f) return 0.001f;
+                return ty;
 
             }
         }
@@ -132,7 +134,7 @@ namespace Wolf3D.Util
         {
             get
             {
-                if (this.Entity == null || transformY < -1000) return 0;
+                if (this.Entity == null) return 0;
                 var w = (int)(Math.Abs((int)(NezGame.h / transformY)) / Scale.X);
                 if (w > NezGame.h && !ShowClose)
                 {

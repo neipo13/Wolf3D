@@ -18,7 +18,8 @@ namespace Wolf3D.Entities
     {
         RedFlash,
         Spike,
-        Grenade
+        Grenade,
+        Disc
     }
     public class Projectile : Entity
     {
@@ -34,8 +35,10 @@ namespace Wolf3D.Entities
             sprite.AddAnimation(ParticleType.Spike.ToString(), spikeAnim);
             var nadeAnim = new SpriteAnimation(Sprites.Skip(15).Take(10).ToArray(), 12);
             sprite.AddAnimation(ParticleType.Grenade.ToString(), nadeAnim);
+            var discAnim = new SpriteAnimation(Sprites.Skip(6).Take(2).ToArray(), 12);
+            sprite.AddAnimation(ParticleType.Disc.ToString(), discAnim);
             var loopMode = AnimatedWolfSprite.LoopMode.ClampForever;
-            if(type == ParticleType.RedFlash)
+            if(type == ParticleType.RedFlash || type == ParticleType.Disc)
             {
                 loopMode = AnimatedWolfSprite.LoopMode.Loop;
             }
@@ -56,7 +59,13 @@ namespace Wolf3D.Entities
             AddComponent(mover);
 
             //controller
-            Components.ProjectileMover controller = new Components.ProjectileMover(direction, speed, damage, type == ParticleType.Grenade);
+            Components.ProjectileMover controller = new Components.ProjectileMover(
+                direction, 
+                speed, 
+                damage, 
+                explodes:type == ParticleType.Grenade, 
+                bounces: type == ParticleType.Disc
+                );
             AddComponent(controller);
 
             Core.Schedule(maxLifespan, (t) =>

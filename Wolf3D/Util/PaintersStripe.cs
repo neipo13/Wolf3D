@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Wolf3D.Util
 {
-    public class PaintersStripe
+    public struct PaintersStripe
     {
         public int textureMapValue { get; set; }
         public float sideDistX { get; set; }

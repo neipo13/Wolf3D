@@ -34,7 +34,7 @@ namespace Wolf3D.Components
         float mouseWheelDelayTimer = 0f;
 
         IWeapon equippedWeapon => heldWeapons[equippedWeaponIndex];
-        IWeapon[] heldWeapons = new IWeapon[4];
+        IWeapon[] heldWeapons = new IWeapon[5];
         Melee meleeWeapon;
         public int equippedWeaponIndex = 0;
         SpriteAnimator handSprite;
@@ -94,6 +94,7 @@ namespace Wolf3D.Components
             heldWeapons[1] = new Shotgun(handSprite, state, ammoText, shottySound);
             meleeWeapon = new Melee(handSprite, state, ammoText, pistolSound);
             heldWeapons[3] = new GrenadeLauncher(handSprite, state, ammoText, chainGunSound);
+            heldWeapons[4] = new Toaster(handSprite, state, ammoText, shottySound);
 
             EquipWeapon((AmmoType)equippedWeaponIndex);
 
@@ -233,6 +234,11 @@ namespace Wolf3D.Components
             else if (Nez.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.D4))
             {
                 EquipWeapon(AmmoType.Explosive);
+            }
+            //toaster
+            else if (Nez.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.D5))
+            {
+                EquipWeapon(AmmoType.Disc);
             }
 
             if (mouseWheelDelayTimer > 0f) mouseWheelDelayTimer -= Time.DeltaTime;

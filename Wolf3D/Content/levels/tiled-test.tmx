@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="22">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="23">
  <editorsettings>
   <export target="tiled-test.json" format="json"/>
  </editorsettings>
@@ -6190,6 +6190,7 @@
   <object id="17" name="shotgun-ammo" x="352" y="224"/>
   <object id="19" name="charger" gid="6" x="192" y="160" width="32" height="32"/>
   <object id="20" name="explosive-ammo" x="160" y="64"/>
+  <object id="22" name="disc-ammo" x="128" y="64"/>
  </objectgroup>
  <objectgroup id="6" name="playerspawn">
   <object id="1" name="spawn" gid="6" x="64" y="64" width="32" height="32">

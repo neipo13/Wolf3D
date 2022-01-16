@@ -14,7 +14,8 @@ namespace Wolf3D.Weapons
         Shotgun,
         MachineGun,
         Explosive,
-        Melee
+        Disc,
+        Melee        
     }
 
     //public enum HandState

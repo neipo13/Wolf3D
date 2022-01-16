@@ -62,7 +62,7 @@ namespace Wolf3D.Scenes
         Entity playerUI;
 
 
-        Dictionary<Tuple<int, int>, DoorMeta> doorDictionary;
+        Dictionary<ValueTuple<int, int>, DoorMeta> doorDictionary;
 
         AsciiPostProcessor asciiPostProcessor;
 
@@ -98,7 +98,7 @@ namespace Wolf3D.Scenes
             wolfRenderer = new WolfRenderer(0);
             AddRenderer(wolfRenderer);
             AddRenderer(new RenderLayerRenderer(1, 10));
-            doorDictionary = new Dictionary<Tuple<int, int>, DoorMeta>();
+            doorDictionary = new Dictionary<ValueTuple<int, int>, DoorMeta>();
             NezGame.PlayMusic(NezGame.world1Music);
             //asciiPostProcessor = new AsciiPostProcessor(999);
             //addPostProcessor(asciiPostProcessor);
@@ -153,7 +153,7 @@ namespace Wolf3D.Scenes
                             var door = new DoorMeta();
                             door.x = x;
                             door.y = y;
-                            doorDictionary.Add(new Tuple<int, int>(x, y), door);
+                            doorDictionary.Add(new ValueTuple<int, int>(x, y), door);
 
                             var moveCollider = new BoxCollider(10, 10);
                             Nez.Flags.SetFlagExclusive(ref moveCollider.PhysicsLayer, (int)Constants.PhysicsLayer.Wall);
@@ -412,6 +412,14 @@ namespace Wolf3D.Scenes
                         explosiveAmmo.Position = (obj.position / 32f * 10f) + new Vector2(5f);
                         AddEntity(explosiveAmmo);
                         break;
+                    case "disc-ammo":
+                        var discPickupSound = Content.Load<SoundEffect>("sfx/cloth");
+                        var discAmmoSprite = new WolfSprite(playerState);
+                        discAmmoSprite.SetSprite(pickupsSprites.Skip(5).FirstOrDefault());
+                        var discAmmo = new AmmoEntity(AmmoType.Disc, 40, discAmmoSprite, discPickupSound);
+                        discAmmo.Position = (obj.position / 32f * 10f) + new Vector2(5f);
+                        AddEntity(discAmmo);
+                        break;
                     case "health":
                         var healthPickupSound = Content.Load<SoundEffect>("sfx/cloth");
                         var healthSprite = new WolfSprite(playerState);
@@ -535,8 +543,8 @@ namespace Wolf3D.Scenes
                 for (int x = 0; x < w; ++x)
                 {
                     // the cell coord is simply got from the integer parts of floorX and floorY
-                    int cellX = (int)(floorX);
-                    int cellY = (int)(floorY);
+                    int cellX = (int)floorX;
+                    int cellY = (int)floorY;
 
                     // get the texture coordinate from the fractional part
                     int tx = (int)(textureSize * (floorX - cellX)) & (textureSize - 1);
@@ -585,8 +593,8 @@ namespace Wolf3D.Scenes
                 float rayDirX = playerState.Direction.X + playerState.Plane.X * cameraX;
                 float rayDirY = playerState.Direction.Y + playerState.Plane.Y * cameraX;
                 //which box of the map we're in
-                int mapX = (int)(offsetPositionX);
-                int mapY = (int)(offsetPositionY);
+                int mapX = (int)offsetPositionX;
+                int mapY = (int)offsetPositionY;
 
                 if (mapX < 0) mapX = 0;
                 if (mapX >= w) mapX = w - 1;
@@ -613,7 +621,7 @@ namespace Wolf3D.Scenes
                 if (rayDirX < 0)
                 {
                     stepX = -1;
-                    sideDistX = (offsetPositionX - (float)mapX) * deltaDistX;
+                    sideDistX = (offsetPositionX - mapX) * deltaDistX;
                 }
                 else
                 {
@@ -633,7 +641,7 @@ namespace Wolf3D.Scenes
                 int mapVal = 0;
                 bool isDoor = false;
                 bool isSolid = true;
-                PaintersStripe paintersStripe = new PaintersStripe();
+                PaintersStripe paintersStripe;
                 //perform DDA
                 while (hit == 0)
                 {
@@ -657,8 +665,8 @@ namespace Wolf3D.Scenes
                     if (mapY >= h) mapY = h - 1;
 
                     mapVal = worldMap[mapX, mapY];
-                    var halfUDVal = halfwallUD[mapX, mapY];
-                    var halfLRVal = halfwallLR[mapX, mapY];
+                    int halfUDVal = halfwallUD[mapX, mapY];
+                    int halfLRVal = halfwallLR[mapX, mapY];
                     //Check if ray has hit a wall
                     if (mapVal > 0)
                     {
@@ -718,8 +726,8 @@ namespace Wolf3D.Scenes
                     if (paintersStripe.isDoor || paintersStripe.isHalfWall)
                     {
                         hit = 0;
-                        var mapX2 = paintersStripe.mapX;
-                        var mapY2 = paintersStripe.mapY;
+                        int mapX2 = paintersStripe.mapX;
+                        int mapY2 = paintersStripe.mapY;
                         if ((int)offsetPositionX < mapX2) mapX2 -= 1;
                         if ((int)offsetPositionY > mapY2) mapY2 += 1;
                         float adj = 1;
@@ -735,13 +743,13 @@ namespace Wolf3D.Scenes
                             ray_mult = adj / rayDirX;
                         }
 
-                        var rxe = offsetPositionX + (rayDirX * ray_mult);
-                        var rye = offsetPositionY + (rayDirY * ray_mult);
+                        float rxe = offsetPositionX + (rayDirX * ray_mult);
+                        float rye = offsetPositionY + (rayDirY * ray_mult);
                         // vertical door (north/south)
                         bool pop = false;
                         if (paintersStripe.side == 0)
                         {
-                            var ystep2 = Mathf.Sqrt((deltaDistX * deltaDistX) - 1);
+                            float ystep2 = Mathf.Sqrt((deltaDistX * deltaDistX) - 1);
                             int tempY = (int)(rye + (stepY * ystep2) / 2);
                             if (tempY != paintersStripe.mapY)
                             {
@@ -750,7 +758,7 @@ namespace Wolf3D.Scenes
                         }
                         else
                         {
-                            var xstep2 = Mathf.Sqrt((deltaDistY * deltaDistY) - 1);
+                            float xstep2 = Mathf.Sqrt((deltaDistY * deltaDistY) - 1);
                             int tempX = (int)(rxe + (stepX * xstep2) / 2);
 
                             if (tempX != paintersStripe.mapX)
@@ -783,14 +791,14 @@ namespace Wolf3D.Scenes
                     //Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
                     if (stripe.side == 0)
                     {
-                        var doorStep = 0f;
-                        if (stripe.isDoor || stripe.isHalfWall) doorStep += (float)stepX / 2f;
+                        float doorStep = 0f;
+                        if (stripe.isDoor || stripe.isHalfWall) doorStep += stepX / 2f;
                         perpWallDist = ((stripe.mapX + doorStep) - offsetPositionX + (1f - stepX) / 2f) / rayDirX;
                     }
                     else
                     {
-                        var doorStep = 0f;
-                        if (stripe.isDoor || stripe.isHalfWall) doorStep += (float)stepY / 2f;
+                        float doorStep = 0f;
+                        if (stripe.isDoor || stripe.isHalfWall) doorStep += stepY / 2f;
                         perpWallDist = ((stripe.mapY + doorStep) - offsetPositionY + (1f - stepY) / 2f) / rayDirY;
                     }
 
@@ -822,7 +830,7 @@ namespace Wolf3D.Scenes
                     if (stripe.isDoor)
                     {
                         ////WHY ARE DOOR TEXTURES ALL GOOFY NOW WTF?
-                        var door = doorDictionary[new Tuple<int, int>(stripe.mapX, stripe.mapY)];
+                        var door = doorDictionary[new ValueTuple<int, int>(stripe.mapX, stripe.mapY)];
                         var pct = door.closedPct;
                         texX += (int)((1f - pct) * textureSize);
                         if (texX > textureSize - 1)
