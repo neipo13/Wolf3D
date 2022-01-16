@@ -37,6 +37,10 @@ namespace Wolf3D.Util
 
         public bool flipX = false;
 
+        public Vector2 Scale = new Vector2(1);
+
+        public bool ShowClose = false;
+
         public WolfSprite(PlayerState playerState) : base()
         {
             this.playerState = playerState;
@@ -120,7 +124,7 @@ namespace Wolf3D.Util
             get
             {
                 if (this.Entity == null) return 0;
-                return Math.Abs((int)(NezGame.h / transformY));
+                return (int)(Math.Abs((int)(NezGame.h / transformY)) / Scale.Y);
             }
         }
 
@@ -128,9 +132,9 @@ namespace Wolf3D.Util
         {
             get
             {
-                if (this.Entity == null) return 0;
-                var w = Math.Abs((int)(NezGame.h / transformY));
-                if (w > NezGame.h)
+                if (this.Entity == null || transformY < -1000) return 0;
+                var w = (int)(Math.Abs((int)(NezGame.h / transformY)) / Scale.X);
+                if (w > NezGame.h && !ShowClose)
                 {
                     return 0;
                 }

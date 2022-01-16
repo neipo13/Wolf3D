@@ -200,19 +200,9 @@ namespace Wolf3D.Components
                 Nez.Flags.SetFlag(ref collidesWithLayers, (int)PhysicsLayer.Player);
 
                 var wolfRenderer = ((Scenes.WolfScene)(Entity.Scene)).wolfRenderer;
-                var currentSprites = wolfRenderer.sprites;
-                var newSpriteLength = currentSprites.Length + 1;
-                wolfRenderer.sprites = new WolfSprite[newSpriteLength];
-                int index = 0;
-                while (index < currentSprites.Length)
-                {
-                    wolfRenderer.sprites[index] = currentSprites[index];
-                    index++;
-                }
                 var proj = new Projectile(this.Entity.Scene, ParticleType.RedFlash, baseDirection, physicsLayer, collidesWithLayers, sprite.playerState, 7, 100f);
                 proj.Position = this.Entity.Position;
-                wolfRenderer.sprites[index] = proj.GetComponent<WolfSprite>();
-                index++;
+                wolfRenderer.AddWolfSprite(proj.GetComponent<WolfSprite>());
                 Entity.Scene.AddEntity(proj);
             }
             shot = true;

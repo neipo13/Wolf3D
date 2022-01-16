@@ -61,6 +61,18 @@
 /processorParam:TextureFormat=Color
 /build:img/effects.png
 
+#begin img/explosion.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:img/explosion.png
+
 #begin img/gibs.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -108,6 +120,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:img/korbis2AClogo.png
+
+#begin img/KorbisCharger.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:img/KorbisCharger.png
 
 #begin img/korbisHud.png
 /importer:TextureImporter
@@ -216,6 +240,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:music/Showdown_at_the_frog_carol.mp3
+
+#begin sfx/barrel_explode.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sfx/barrel_explode.wav
 
 #begin sfx/Blaster_sound.mp3
 /importer:Mp3Importer

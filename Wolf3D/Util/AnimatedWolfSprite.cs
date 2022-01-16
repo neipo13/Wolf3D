@@ -95,6 +95,7 @@ namespace Wolf3D.Util
         LoopMode _loopMode;
 
         Dictionary<string, Color[]> FrameColors;
+        Color[] textureColors;
 
 
         public AnimatedWolfSprite(PlayerState playerstate) : base(playerstate)
@@ -106,6 +107,7 @@ namespace Wolf3D.Util
         //caching colors changes for 
         public override void SetSprite(Sprite Sprite)
         {
+            FillTextureColors(Sprite);
             this.Sprite = Sprite;
             var subString = Sprite.ToString();
             if (FrameColors.ContainsKey(subString))
@@ -114,7 +116,7 @@ namespace Wolf3D.Util
             }
             else
             {
-                SpriteColors = Util.SpriteHelpers.GetColors(Sprite);
+                SpriteColors = Util.SpriteHelpers.GetColors(Sprite, textureColors);
                 FrameColors.Add(subString, SpriteColors);
             }
         }
@@ -178,15 +180,26 @@ namespace Wolf3D.Util
                 _animations.Add(atlas.AnimationNames[i], atlas.SpriteAnimations[i]);
         }
 
+        public void FillTextureColors(Sprite sprite)
+        {
+            //fill the texture color cache
+            if (textureColors == null || textureColors.Length == 0)
+            {
+                textureColors = SpriteHelpers.GetTextureColors(sprite);
+            }
+        }
+
         /// <summary>
         /// Adds a SpriteAnimation
         /// </summary>
         public void AddAnimation(string name, SpriteAnimation animation)
         {
+            FillTextureColors(animation.Sprites[0]);
             // if we have no sprite use the first frame we find
             if (Sprite == null && animation.Sprites.Length > 0)
                 SetSprite(animation.Sprites[0]);
             _animations[name] = animation;
+
 
             // fill the frame color cache
             for (int i = 0; i < animation.Sprites.Length; i++)
@@ -195,7 +208,7 @@ namespace Wolf3D.Util
                 var subString = subTexture.ToString();
                 if (!FrameColors.ContainsKey(subString))
                 {
-                    FrameColors.Add(subString, SpriteHelpers.GetColors(subTexture));
+                    FrameColors.Add(subString, SpriteHelpers.GetColors(subTexture, textureColors));
                 }
             }
         }

@@ -55,22 +55,17 @@ namespace Wolf3D.Entities
             Console.WriteLine($"ENEMY: {Nez.Flags.BinaryStringRepresentation(collider.PhysicsLayer)}");
 
             sprite = new AnimatedWolfSprite(playerState);
-            sprite.AddAnimation(ChargerState.Idle.ToString(), new SpriteAnimation(new Sprite[] { Sprites[0] }, 12));
+            sprite.ShowClose = true;
+            sprite.AddAnimation(ChargerState.Idle.ToString(), new SpriteAnimation(new Sprite[] { Sprites[7] }, 12));
 
 
-            var hitAnim = new SpriteAnimation(Sprites.Skip(2).Take(1).ToArray(), 12);
+            var hitAnim = new SpriteAnimation(Sprites.Skip(14).Take(1).ToArray(), 12);
             sprite.AddAnimation(ChargerState.Hit.ToString(), hitAnim);
 
-            var deadAnim = new SpriteAnimation(Sprites.Skip(2).Take(6).ToArray(), 12);
-            sprite.AddAnimation(ChargerState.Dead.ToString(), deadAnim);
-
-            var gibAnim = new SpriteAnimation(Sprites.Skip(8).Take(7).ToArray(), 12);
-            sprite.AddAnimation(ChargerState.Gib.ToString(), gibAnim);
-
-            var walkAnim = new SpriteAnimation(Sprites.Take(2).ToArray(), 4);
+            var walkAnim = new SpriteAnimation(Sprites.Take(6).ToArray(), 24);
             sprite.AddAnimation(ChargerState.Charge.ToString(), walkAnim);
 
-            var shootAnim = new SpriteAnimation(Sprites.Skip(15).Take(4).ToArray(), 12);
+            var shootAnim = new SpriteAnimation(Sprites.Skip(9).Take(5).ToArray(), 12);
             sprite.AddAnimation(ChargerState.Alert.ToString(), shootAnim);
 
             sprite.Play(ChargerState.Idle.ToString());
@@ -119,9 +114,11 @@ namespace Wolf3D.Entities
         public override void OnDeath()
         {
             dead = true;
+            sprite.ShowClose = false;
             hitEffects[1].Play(0.4f * NezGame.gameSettings.sfxVolumeMultiplier, 0f, 0f);
             // for now just shut stuff off no need to delete it
-            sprite.Play(ChargerState.Dead.ToString(), AnimatedWolfSprite.LoopMode.ClampForever);
+            //sprite.Play(ChargerState.Dead.ToString(), AnimatedWolfSprite.LoopMode.ClampForever);
+            sprite.Enabled = false;
             collider.Enabled = false;
             controller.Enabled = false;
             RemoveComponent(collider);
@@ -131,32 +128,28 @@ namespace Wolf3D.Entities
             var wolfRenderer = ((Scenes.WolfScene)(this.Scene)).wolfRenderer;
 
             //sometimes spawn gibs
-            if (Nez.Random.NextFloat() < gibChance)
+            hitEffects[2].Play(0.4f * NezGame.gameSettings.sfxVolumeMultiplier, 0f, 0f);
+            //sprite.Play(ChargerState.Gib.ToString(), AnimatedWolfSprite.LoopMode.ClampForever);
+            int gibNum = Nez.Random.Range(5, 10);
+            var currentSprites = wolfRenderer.sprites;
+            var newSpriteLength = currentSprites.Length + gibNum;
+            wolfRenderer.sprites = new WolfSprite[newSpriteLength];
+            int index = 0;
+            while (index < currentSprites.Length)
             {
-                hitEffects[2].Play(0.4f * NezGame.gameSettings.sfxVolumeMultiplier, 0f, 0f);
-                sprite.Play(ChargerState.Gib.ToString(), AnimatedWolfSprite.LoopMode.ClampForever);
-                int gibNum = Nez.Random.Range(3, 7);
-                var currentSprites = wolfRenderer.sprites;
-                var newSpriteLength = currentSprites.Length + gibNum;
-                wolfRenderer.sprites = new WolfSprite[newSpriteLength];
-                int index = 0;
-                while (index < currentSprites.Length)
-                {
-                    wolfRenderer.sprites[index] = currentSprites[index];
-                    index++;
-                }
-                for (int i = 0; i < gibNum; i++)
-                {
-                    GibType type = GibType.solider_head;
-                    if (i > 0) type = (GibType)Nez.Random.Range(0, 1);
-                    var x = Nez.Random.Range(-1f, 1f);
-                    var y = Nez.Random.Range(-1f, 1f);
-                    var gib = new GibEntity(playerState, gibSprites, type, new Vector2(x, y));
-                    gib.Position = this.Position;
-                    wolfRenderer.sprites[index] = gib.GetComponent<WolfSprite>();
-                    index++;
-                    this.Scene.AddEntity(gib);
-                }
+                wolfRenderer.sprites[index] = currentSprites[index];
+                index++;
+            }
+            for (int i = 0; i < gibNum; i++)
+            {
+                GibType type = GibType.eyeball;
+                var x = Nez.Random.Range(-1f, 1f);
+                var y = Nez.Random.Range(-1f, 1f);
+                var gib = new GibEntity(playerState, gibSprites, type, new Vector2(x, y));
+                gib.Position = this.Position;
+                wolfRenderer.sprites[index] = gib.GetComponent<WolfSprite>();
+                index++;
+                this.Scene.AddEntity(gib);
             }
             //this.Destroy();
         }

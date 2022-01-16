@@ -195,15 +195,7 @@ namespace Wolf3D.Components
 
                 //prep the sprite arry
                 var wolfRenderer = ((Scenes.WolfScene)(Entity.Scene)).wolfRenderer;
-                var currentSprites = wolfRenderer.sprites;
-                var newSpriteLength = currentSprites.Length + numShots;
-                wolfRenderer.sprites = new WolfSprite[newSpriteLength];
-                int index = 0;
-                while (index < currentSprites.Length)
-                {
-                    wolfRenderer.sprites[index] = currentSprites[index];
-                    index++;
-                }
+                List<WolfSprite> newSprites = new List<WolfSprite>();
                 for (int i = 0; i < numShots; i++)
                 {
                     var direction = baseDirection;
@@ -215,10 +207,10 @@ namespace Wolf3D.Components
                     //fire out projectiles with some randomness
                     var proj = new Projectile(this.Entity.Scene, ParticleType.RedFlash, direction, physicsLayer, collidesWithLayers, sprite.playerState, 9, 80f);
                     proj.Position = this.Entity.Position;
-                    wolfRenderer.sprites[index] = proj.GetComponent<WolfSprite>();
-                    index++;
+                    newSprites.Add(proj.GetComponent<WolfSprite>());
                     Entity.Scene.AddEntity(proj);
                 }
+                wolfRenderer.AddWolfSprites(newSprites.ToArray());
             }
             shot = true;
             ShootWait = afterShotWaitTime;

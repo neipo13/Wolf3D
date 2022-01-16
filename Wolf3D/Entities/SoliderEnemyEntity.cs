@@ -54,6 +54,7 @@ namespace Wolf3D.Entities
             Console.WriteLine($"ENEMY: {Nez.Flags.BinaryStringRepresentation(collider.PhysicsLayer)}");
 
             sprite = new AnimatedWolfSprite(playerState);
+            sprite.ShowClose = true;
             sprite.AddAnimation(SoldierSpriteState.Idle.ToString(), new SpriteAnimation(new Sprite[] { Sprites[0] }, 12));
             var walkAnim = new SpriteAnimation(Sprites.Take(2).ToArray(), 4);
             sprite.AddAnimation(SoldierSpriteState.Walk.ToString(), walkAnim);
@@ -120,6 +121,7 @@ namespace Wolf3D.Entities
         public override void OnDeath()
         {
             dead = true;
+            sprite.ShowClose = false;
             hitEffects[1].Play(0.4f * NezGame.gameSettings.sfxVolumeMultiplier, 0f, 0f);
             // for now just shut stuff off no need to delete it
             sprite.Play(SoldierSpriteState.Dead.ToString(), AnimatedWolfSprite.LoopMode.ClampForever);

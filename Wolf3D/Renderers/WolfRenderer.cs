@@ -57,6 +57,39 @@ namespace Wolf3D.Renderers
             }
             shaking = true;
         }
+
+        public void AddWolfSprite(WolfSprite sprite)
+        {
+            var currentSprites = sprites;
+            var newSpriteLength = currentSprites.Length + 1;
+            sprites = new WolfSprite[newSpriteLength];
+            int index = 0;
+            while (index < currentSprites.Length)
+            {
+                sprites[index] = currentSprites[index];
+                index++;
+            }
+            sprites[index] = sprite;
+        }
+
+        public void AddWolfSprites(WolfSprite[] newSprites)
+        {
+            var currentSprites = sprites;
+            var newSpriteLength = currentSprites.Length + newSprites.Length;
+            sprites = new WolfSprite[newSpriteLength];
+            int index = 0;
+            while (index < currentSprites.Length)
+            {
+                sprites[index] = currentSprites[index];
+                index++;
+            }
+            for (int i = 0; i < newSprites.Length; i++)
+            {
+                sprites[index] = newSprites[i];
+                index++;
+            }
+        }
+
         public void Update()
         {
             //camera shake update

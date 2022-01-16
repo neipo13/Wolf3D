@@ -226,11 +226,11 @@ namespace Wolf3D.Scenes
 
             var wallTexture = Content.Load<Texture2D>("img/Spacetiles");
             wallSprites = Sprite.SpritesFromAtlas(wallTexture, 32, 32).ToArray();
-
+            var wallTextureColors = SpriteHelpers.GetTextureColors(wallSprites[0]);
             SpriteColors = new Color[wallSprites.Length][];
             for (int i = 0; i < wallSprites.Length; i++)
             {
-                SpriteColors[i] = SpriteHelpers.GetColors(wallSprites[i]);
+                SpriteColors[i] = SpriteHelpers.GetColors(wallSprites[i], wallTextureColors);
             }
             var blobTexture = Content.Load<Texture2D>("img/blobman");
             var soliderTexture = Content.Load<Texture2D>("img/BadGuy");
@@ -239,6 +239,8 @@ namespace Wolf3D.Scenes
             var pickupsSprites = Sprite.SpritesFromAtlas(pickupsTexture, 32, 32);
             var gibTexutre = Content.Load<Texture2D>("img/gibs");
             var gibSprites = Sprite.SpritesFromAtlas(gibTexutre, 32, 32);
+            var chargerTexture = Content.Load<Texture2D>("img/KorbisCharger");
+            var chargerSprites = Sprite.SpritesFromAtlas(chargerTexture, 48, 48);
 
             playerUI = CreateEntity("playerUi");
 
@@ -368,7 +370,7 @@ namespace Wolf3D.Scenes
                         var chargerHitSoundEffect = Content.Load<SoundEffect>("sfx/goblin-hurt-1");
                         var chargerDeadSoundEffect = Content.Load<SoundEffect>("sfx/goblin-dead");
                         var chargerGibSoundEffect = Content.Load<SoundEffect>("sfx/splat1");
-                        var charger = new ChargerEntity(playerState, soliderSprites, worldMap, gibSprites, new List<SoundEffect>() { chargerHitSoundEffect, chargerDeadSoundEffect, chargerGibSoundEffect });
+                        var charger = new ChargerEntity(playerState, chargerSprites, worldMap, gibSprites, new List<SoundEffect>() { chargerHitSoundEffect, chargerDeadSoundEffect, chargerGibSoundEffect });
                         charger.Position = (obj.position / 32f * 10f) + new Vector2(5f);
                         AddEntity(charger);
                         break;
@@ -401,6 +403,14 @@ namespace Wolf3D.Scenes
                         var ChaingunAmmo = new AmmoEntity(AmmoType.MachineGun, 20, ChaingunAmmoSprite, ChaingunPickupSound);
                         ChaingunAmmo.Position = (obj.position / 32f * 10f) + new Vector2(5f);
                         AddEntity(ChaingunAmmo);
+                        break;
+                    case "explosive-ammo":
+                        var explosivePickupSound = Content.Load<SoundEffect>("sfx/cloth");
+                        var explosiveAmmoSprite = new WolfSprite(playerState);
+                        explosiveAmmoSprite.SetSprite(pickupsSprites.Skip(5).FirstOrDefault());
+                        var explosiveAmmo = new AmmoEntity(AmmoType.Explosive, 20, explosiveAmmoSprite, explosivePickupSound);
+                        explosiveAmmo.Position = (obj.position / 32f * 10f) + new Vector2(5f);
+                        AddEntity(explosiveAmmo);
                         break;
                     case "health":
                         var healthPickupSound = Content.Load<SoundEffect>("sfx/cloth");

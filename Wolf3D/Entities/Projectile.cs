@@ -17,7 +17,8 @@ namespace Wolf3D.Entities
     public enum ParticleType
     {
         RedFlash,
-        Spike
+        Spike,
+        Grenade
     }
     public class Projectile : Entity
     {
@@ -31,6 +32,8 @@ namespace Wolf3D.Entities
             sprite.AddAnimation(ParticleType.RedFlash.ToString(), new SpriteAnimation(Sprites.Skip(6).Take(2).ToArray(), 12));
             var spikeAnim = new SpriteAnimation(Sprites.Skip(8).Take(7).ToArray(), 12);
             sprite.AddAnimation(ParticleType.Spike.ToString(), spikeAnim);
+            var nadeAnim = new SpriteAnimation(Sprites.Skip(15).Take(10).ToArray(), 12);
+            sprite.AddAnimation(ParticleType.Grenade.ToString(), nadeAnim);
             var loopMode = AnimatedWolfSprite.LoopMode.ClampForever;
             if(type == ParticleType.RedFlash)
             {
@@ -53,7 +56,7 @@ namespace Wolf3D.Entities
             AddComponent(mover);
 
             //controller
-            Components.ProjectileMover controller = new Components.ProjectileMover(direction, speed, damage);
+            Components.ProjectileMover controller = new Components.ProjectileMover(direction, speed, damage, type == ParticleType.Grenade);
             AddComponent(controller);
 
             Core.Schedule(maxLifespan, (t) =>
@@ -67,6 +70,20 @@ namespace Wolf3D.Entities
             if(type == ParticleType.Spike.ToString())
             {
                 if (this.Enabled) this.Destroy();
+            }
+            else if (type == ParticleType.Grenade.ToString())
+            {
+                if (this.Enabled)
+                {
+                    this.Enabled = false;
+                    //spawn explosion
+                    var physicsLayer = -1;
+                    Nez.Flags.SetFlagExclusive(ref physicsLayer, (int)Constants.PhysicsLayer.PlayerShot);
+                    var explosion = new Explosion(Scene, Position, physicsLayer, sprite.playerState, 50, 10f);
+                    explosion.Position = this.Position;
+                    Scene.AddEntity(explosion);
+                    this.Destroy();
+                }
             }
         }
 

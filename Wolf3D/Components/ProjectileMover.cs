@@ -16,14 +16,16 @@ namespace Wolf3D.Components
         Vector2 direction;
         float speed;
         int dmg;
+        bool explodeOnContact = false;
 
         ColliderTriggerHelper triggerHelper;
 
-        public ProjectileMover(Vector2 direction, float speed, int dmg)
+        public ProjectileMover(Vector2 direction, float speed, int dmg, bool explodes = false)
         {
             this.direction = direction;
             this.speed = speed;
             this.dmg = dmg;
+            this.explodeOnContact = explodes;
         }
 
         public override void OnAddedToEntity()
@@ -36,6 +38,16 @@ namespace Wolf3D.Components
 
         public void OnTriggerEnter(Collider other, Collider local)
         {
+            if (explodeOnContact)
+            {
+                //spawn explosion
+                var sprite = Entity.GetComponent<Util.WolfSprite>();
+                var physicsLayer = -1;
+                Nez.Flags.SetFlagExclusive(ref physicsLayer, (int)Constants.PhysicsLayer.PlayerShot);
+                var explosion = new Explosion(Entity.Scene, Entity.Position, physicsLayer, sprite.playerState, 50, 50f);
+                explosion.Position = Entity.Position;
+                Entity.Scene.AddEntity(explosion);
+            }
             ShootableEntity e = other.Entity as ShootableEntity;
             if (e != null)
             {
@@ -51,15 +63,6 @@ namespace Wolf3D.Components
             mover.Move(direction * speed * Time.DeltaTime, out collisionResult);
 
             triggerHelper.Update();
-            //if(collisionResult.Collider != null)
-            //{
-            //    ShootableEntity e = collisionResult.Collider.Entity as ShootableEntity;
-            //    if(e != null)
-            //    {
-            //        e.Hit(dmg);
-            //    }
-            //    this.Entity.Destroy();
-            //}
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Wolf3D.Components
 
         AnimatedWolfSprite sprite;
 
-        const float moveSpeed = 150f;
+        const float moveSpeed = 100f;
 
         public override void OnAddedToEntity()
         {
@@ -75,16 +75,16 @@ namespace Wolf3D.Components
         {
             sprite.Play(ChargerState.Alert.ToString(), AnimatedWolfSprite.LoopMode.Loop);
             alertWaitTimer = 0f;
-            sprite.flashing = true;
-            sprite.flashColor = Color.Red;
+            //sprite.flashing = true;
+            //sprite.flashColor = Color.Red;
         }
         void Alert_Tick()
         {
             alertWaitTimer += Time.DeltaTime;
             if(alertWaitTimer > alertWaitTime)
             {
-                sprite.flashColor = Color.White;
-                sprite.flashing = false;
+                //sprite.flashColor = Color.White;
+                //sprite.flashing = false;
                 CurrentState = ChargerState.Charge;
             }
         }
